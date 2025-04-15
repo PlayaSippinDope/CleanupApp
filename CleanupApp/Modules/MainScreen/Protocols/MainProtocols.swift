@@ -6,3 +6,13 @@
 //
 
 import Foundation
+
+protocol MainViewInput: AnyObject {}
+protocol MainViewOutput: AnyObject {
+    func viewDidLoad()
+}
+
+protocol MainInteractorInput: AnyObject {}
+protocol MainInteractorOutput: AnyObject {}
+
+protocol MainRouterInput: AnyObject {}

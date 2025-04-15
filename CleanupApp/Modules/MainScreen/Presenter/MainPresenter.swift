@@ -5,4 +5,16 @@
 //  Created by Philip on 14.04.25.
 //
 
-import Foundation
+final class MainPresenter {
+    weak var view: MainViewInput?
+    var interactor: MainInteractorInput?
+    var router: MainRouterInput?
+}
+
+extension MainPresenter: MainViewOutput {
+    func viewDidLoad() {
+    }
+}
+
+extension MainPresenter: MainInteractorOutput {
+}

@@ -5,4 +5,10 @@
 //  Created by Philip on 14.04.25.
 //
 
-import Foundation
+import UIKit
+
+final class AppAssembly {
+    static func makeMainScreen() -> UIViewController {
+        return MainScreenModuleAssembly.create()
+    }
+}
