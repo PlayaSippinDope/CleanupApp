@@ -48,7 +48,6 @@ final class MockMainViewInput: MainViewInput {
     }
 }
 
-
 // MARK: - Mock Interactor
 final class MockMainInteractorInput: MainInteractorInput {
     var stubbedGroup: PhotoGroup?
