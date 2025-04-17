@@ -1,5 +1,4 @@
-# CleanupApp
-# Duplicate Photo Cleaner (iOS)
+# CleanupApp - Duplicate Photo Cleaner (iOS)
 
 Прототип приложения для поиска и удаления похожих фото из галереи пользователя.  
 Реализовано в рамках тестового задания.
