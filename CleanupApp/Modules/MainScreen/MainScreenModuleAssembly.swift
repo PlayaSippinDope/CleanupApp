@@ -5,15 +5,15 @@
 //  Created by Philip on 15.04.25.
 //
 
-// PhotoCleaner/Modules/MainScreen/MainScreenModuleAssembly.swift
-
 import UIKit
 
 enum MainScreenModuleAssembly {
     static func create() -> UIViewController {
+        let photoService = PhotoLibraryService()
+        
         let view = MainViewController()
         let presenter = MainPresenter()
-        let interactor = MainInteractor()
+        let interactor = MainInteractor(photoService: photoService)
         let router = MainRouter()
 
         view.presenter = presenter

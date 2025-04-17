@@ -5,4 +5,10 @@
 //  Created by Philip on 14.04.25.
 //
 
-import Foundation
+import UIKit
+import Photos
+
+struct PhotoGroup {
+    let id: UUID
+    var assets: [PHAsset]
+}
