@@ -13,7 +13,8 @@ final class MainViewController: UIViewController {
     
     // MARK: - Private Properties
     private var photoGroups: [PhotoGroup] = []
-    
+    private var shouldScrollToFirstItem = false
+
     // MARK: - UI Elements
     private lazy var headerView: UILabel = {
         let headerView = UILabel()
@@ -89,9 +90,12 @@ final class MainViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        let topOffset = CGPoint(x: 0, y: -collectionView.adjustedContentInset.top)
-        collectionView.setContentOffset(topOffset, animated: false)
+
+        if shouldScrollToFirstItem, photoGroups.count > 0, photoGroups[0].assets.count > 0 {
+            let indexPath = IndexPath(item: 0, section: 0)
+            collectionView.scrollToItem(at: indexPath, at: .top, animated: true)
+            shouldScrollToFirstItem = false
+        }
     }
     
     // MARK: - Setup Layout
@@ -163,6 +167,7 @@ final class MainViewController: UIViewController {
 // MARK: - Actions
 extension MainViewController {
     @objc private func deleteButtonTapped() {
+        shouldScrollToFirstItem = true
         presenter?.deleteSelectedPhotos()
         updateHeaderAndButton()
     }
@@ -427,7 +432,6 @@ extension MainViewController: PhotoCellDelegate {
 
     func photoCellDidTapImage(_ cell: PhotoCollectionViewCell) {
         guard let indexPath = collectionView.indexPath(for: cell) else { return }
-        
         let flashView = UIView(frame: cell.bounds)
         flashView.backgroundColor = .white
         flashView.alpha = 0
