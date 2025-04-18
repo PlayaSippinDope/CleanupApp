@@ -44,12 +44,28 @@ final class PhotoSectionHeaderView: UICollectionReusableView {
     @objc private func toggleButtonTapped() {
         onToggleSelection?()
     }
-
+    
     func configure(similarCount: Int, isAllSelected: Bool) {
         titleLabel.text = "\(similarCount) Similar"
-        toggleButton.setTitle(isAllSelected ? "Deselect all" : "Select all", for: .normal)
+        
+        let newTitle = isAllSelected ? "Deselect all" : "Select all"
+        
+        UIView.animate(withDuration: 0.1, animations: {
+            self.toggleButton.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
+        }, completion: { _ in
+            UIView.transition(with: self.toggleButton,
+                              duration: 0.2,
+                              options: .transitionCrossDissolve,
+                              animations: {
+                self.toggleButton.setTitle(newTitle, for: .normal)
+            }, completion: { _ in
+                UIView.animate(withDuration: 0.2) {
+                    self.toggleButton.transform = .identity
+                }
+            })
+        })
     }
-
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

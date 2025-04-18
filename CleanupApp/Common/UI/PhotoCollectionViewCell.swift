@@ -29,6 +29,17 @@ final class PhotoCollectionViewCell: UICollectionViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    func handleTap() {
+        print("tap")
+        UIView.animate(withDuration: 0.1, animations: {
+            self.imageView.alpha = 0.7
+        }, completion: { _ in
+            UIView.animate(withDuration: 0.3) {
+                self.imageView.alpha = 1.0
+            }
+        })
+    }
 
     private func setupUI() {
         imageView.contentMode = .scaleAspectFill

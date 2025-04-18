@@ -47,7 +47,6 @@ protocol MainInteractorOutput: AnyObject {
 }
 
 protocol MainRouterInput: AnyObject {
-    func navigateToSuccessScreen(deletedCount: Int)
     func showSuccessScreen(deletedCount: Int, freedMB: Double)
     func openFullScreenPhoto(asset: PHAsset)
 }

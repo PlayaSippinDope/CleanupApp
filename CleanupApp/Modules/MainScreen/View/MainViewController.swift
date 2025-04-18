@@ -40,16 +40,26 @@ final class MainViewController: UIViewController {
     }()
     
     private lazy var deleteButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20)
-        button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = .systemBlue
+        var config = UIButton.Configuration.filled()
+        config.cornerStyle = .capsule
+        config.title = "Delete"
+        config.baseForegroundColor = .white
+        config.background.backgroundColor = .systemBlue
+        config.titleAlignment = .center
+        config.imagePadding = 10
+        config.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { attributes in
+            var newAttributes = attributes
+            newAttributes.font = UIFont.boldSystemFont(ofSize: 20)
+            return newAttributes
+        }
+
+        let button = UIButton(configuration: config, primaryAction: nil)
         button.alpha = 0
         button.addTarget(self, action: #selector(deleteButtonTapped), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
-    
+
     private let loadingIndicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView(style: .large)
         indicator.color = .gray
@@ -75,6 +85,13 @@ final class MainViewController: UIViewController {
         view.backgroundColor = UIColor.systemBlue
         setupLayout()
         presenter?.viewDidLoad()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        let topOffset = CGPoint(x: 0, y: -collectionView.adjustedContentInset.top)
+        collectionView.setContentOffset(topOffset, animated: false)
     }
     
     // MARK: - Setup Layout
@@ -391,10 +408,6 @@ extension MainViewController: UICollectionViewDataSource, UICollectionViewDelega
 
         return header
     }
-    
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        presenter?.toggleSelection(at: indexPath)
-    }
 }
 
 // MARK: - PhotoSectionHeaderViewDelegate
@@ -414,6 +427,28 @@ extension MainViewController: PhotoCellDelegate {
 
     func photoCellDidTapImage(_ cell: PhotoCollectionViewCell) {
         guard let indexPath = collectionView.indexPath(for: cell) else { return }
-        presenter?.openFullScreenPhoto(at: indexPath)
+        
+        let flashView = UIView(frame: cell.bounds)
+        flashView.backgroundColor = .white
+        flashView.alpha = 0
+        flashView.isUserInteractionEnabled = false
+        flashView.layer.cornerRadius = cell.layer.cornerRadius
+        flashView.clipsToBounds = true
+        cell.addSubview(flashView)
+        cell.bringSubviewToFront(flashView)
+        
+        UIView.animate(withDuration: 0.05, animations: {
+            flashView.alpha = 0.8
+        }) { _ in
+            UIView.animate(withDuration: 0.2, animations: {
+                flashView.alpha = 0
+            }, completion: { _ in
+                flashView.removeFromSuperview()
+            })
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+            self.presenter?.openFullScreenPhoto(at: indexPath)
+        }
     }
 }

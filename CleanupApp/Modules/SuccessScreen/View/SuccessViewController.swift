@@ -22,6 +22,23 @@ final class SuccessViewController: UIViewController, SuccessViewProtocol {
     private let starsImageView = UIImageView()
     private let clockImageView = UIImageView()
     private let subtitleStack = UIStackView()
+    private let deletedTitleLabel = UILabel()
+    private let savedSubtitleLabel = UILabel()
+
+    private var viewsToAnimate: [UIView] {
+        [
+            celebrationImageView,
+            congratsLabel,
+            starsImageView,
+            deletedTitleLabel,
+            deletedLabel,
+            clockImageView,
+            savedLabel,
+            savedSubtitleLabel,
+            infoLabel,
+            button
+        ]
+    }
 
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -37,6 +54,15 @@ final class SuccessViewController: UIViewController, SuccessViewProtocol {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         button.layer.cornerRadius = button.frame.height / 2
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        prepareForAnimation()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        animateAppearance()
     }
 
     // MARK: - Public
@@ -55,8 +81,31 @@ final class SuccessViewController: UIViewController, SuccessViewProtocol {
             ("10 Minutes", .systemBlue, .systemFont(ofSize: 20, weight: .semibold))
         ])
     }
+    
+    // MARK: - Animation
+    private func prepareForAnimation() {
+        viewsToAnimate.forEach {
+            $0.alpha = 0
+            $0.transform = CGAffineTransform(translationX: 0, y: 20)
+        }
+    }
 
-    // MARK: - Setup
+    private func animateAppearance() {
+        for (index, view) in viewsToAnimate.enumerated() {
+            UIView.animate(
+                withDuration: 0.6,
+                delay: Double(index) * 0.1,
+                options: [.curveEaseInOut],
+                animations: {
+                    view.alpha = 1
+                    view.transform = .identity
+                },
+                completion: nil
+            )
+        }
+    }
+    
+    // MARK: - Setup Layout
     private func setupSubviews() {
         // Image
         celebrationImageView.image = UIImage(named: "celebration")
@@ -67,8 +116,13 @@ final class SuccessViewController: UIViewController, SuccessViewProtocol {
         congratsLabel.font = .boldSystemFont(ofSize: 32)
         congratsLabel.textAlignment = .center
 
-        // Deleted Label Stack
-        let deletedTitle = makeLabel(text: "You have deleted", alignment: .center)
+        // Deleted Title Label
+        deletedTitleLabel.text = "You have deleted"
+        deletedTitleLabel.font = .systemFont(ofSize: 20)
+        deletedTitleLabel.textColor = .label
+        deletedTitleLabel.textAlignment = .center
+
+        // Deleted Label
         deletedLabel.textAlignment = .center
         deletedLabel.numberOfLines = 0
 
@@ -80,7 +134,8 @@ final class SuccessViewController: UIViewController, SuccessViewProtocol {
             starsImageView.widthAnchor.constraint(equalTo: starsImageView.heightAnchor)
         ])
 
-        let titleTextStack = UIStackView(arrangedSubviews: [deletedTitle, deletedLabel])
+        // Title Stack (Deleted Title + Deleted Label)
+        let titleTextStack = UIStackView(arrangedSubviews: [deletedTitleLabel, deletedLabel])
         titleTextStack.axis = .vertical
         titleTextStack.spacing = 2
         titleTextStack.alignment = .leading
@@ -90,11 +145,15 @@ final class SuccessViewController: UIViewController, SuccessViewProtocol {
         titleStack.spacing = 8
         titleStack.alignment = .center
 
-        // Saved Label Stack
+        // Saved Label
         savedLabel.textAlignment = .center
         savedLabel.numberOfLines = 1
 
-        let savedSubtitle = makeLabel(text: "using Cleanup", alignment: .center)
+        // Saved Subtitle Label
+        savedSubtitleLabel.text = "using Cleanup"
+        savedSubtitleLabel.font = .systemFont(ofSize: 20)
+        savedSubtitleLabel.textColor = .label
+        savedSubtitleLabel.textAlignment = .center
 
         clockImageView.image = UIImage(named: "hourglass")
         clockImageView.contentMode = .scaleAspectFit
@@ -104,7 +163,8 @@ final class SuccessViewController: UIViewController, SuccessViewProtocol {
             clockImageView.widthAnchor.constraint(equalTo: clockImageView.heightAnchor)
         ])
 
-        let subtitleTextStack = UIStackView(arrangedSubviews: [savedLabel, savedSubtitle])
+        // Subtitle Stack (Saved Label + Saved Subtitle Label)
+        let subtitleTextStack = UIStackView(arrangedSubviews: [savedLabel, savedSubtitleLabel])
         subtitleTextStack.axis = .vertical
         subtitleTextStack.spacing = 2
         subtitleTextStack.alignment = .leading
@@ -167,6 +227,7 @@ final class SuccessViewController: UIViewController, SuccessViewProtocol {
             button.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -50)
         ])
     }
+
 
     private func setupLayout() {
         celebrationImageView.translatesAutoresizingMaskIntoConstraints = false
