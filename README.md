@@ -55,4 +55,10 @@
 
 ---
 
+## Скриншоты
+
+![image](https://github.com/user-attachments/assets/29221a71-1785-4c4b-a6ce-5d33d0b98a70)
+
+
+---
 
