@@ -30,7 +30,6 @@
 		D472F78E2DAEBC380035D2DA /* PhotoSectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D472F78D2DAEBC380035D2DA /* PhotoSectionHeaderView.swift */; };
 		D472F7902DAEBDA60035D2DA /* PhotoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D472F78F2DAEBDA60035D2DA /* PhotoCollectionViewCell.swift */; };
 		D472F7922DAFCF710035D2DA /* SuccessModuleAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = D472F7912DAFCF700035D2DA /* SuccessModuleAssembly.swift */; };
-		D472F7942DAFD6090035D2DA /* SuccessViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D472F7932DAFD6090035D2DA /* SuccessViewModel.swift */; };
 		D472F7A12DB020510035D2DA /* FullScreenPhotoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D472F7A02DB020510035D2DA /* FullScreenPhotoViewController.swift */; };
 		D4A992682DB0D808004A615F /* MainViewController+Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A992672DB0D808004A615F /* MainViewController+Constants.swift */; };
 		D4A9926B2DB0FB58004A615F /* MainPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A9926A2DB0FB58004A615F /* MainPresenterTests.swift */; };
@@ -74,7 +73,6 @@
 		D472F78D2DAEBC380035D2DA /* PhotoSectionHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoSectionHeaderView.swift; sourceTree = "<group>"; };
 		D472F78F2DAEBDA60035D2DA /* PhotoCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCollectionViewCell.swift; sourceTree = "<group>"; };
 		D472F7912DAFCF700035D2DA /* SuccessModuleAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessModuleAssembly.swift; sourceTree = "<group>"; };
-		D472F7932DAFD6090035D2DA /* SuccessViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessViewModel.swift; sourceTree = "<group>"; };
 		D472F7A02DB020510035D2DA /* FullScreenPhotoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullScreenPhotoViewController.swift; sourceTree = "<group>"; };
 		D4A992672DB0D808004A615F /* MainViewController+Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MainViewController+Constants.swift"; sourceTree = "<group>"; };
 		D4A9926A2DB0FB58004A615F /* MainPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainPresenterTests.swift; sourceTree = "<group>"; };
@@ -264,7 +262,6 @@
 				D448741A2DAD9B4900BA3F8C /* Router */,
 				D44874192DAD9B4100BA3F8C /* Protocols */,
 				D472F7912DAFCF700035D2DA /* SuccessModuleAssembly.swift */,
-				D472F7932DAFD6090035D2DA /* SuccessViewModel.swift */,
 			);
 			path = SuccessScreen;
 			sourceTree = "<group>";
@@ -435,7 +432,6 @@
 				D448741F2DAD9B7400BA3F8C /* MainPresenter.swift in Sources */,
 				D44874232DAD9B8F00BA3F8C /* MainRouter.swift in Sources */,
 				D44874282DAD9BB100BA3F8C /* SuccessViewController.swift in Sources */,
-				D472F7942DAFD6090035D2DA /* SuccessViewModel.swift in Sources */,
 				D472F7922DAFCF710035D2DA /* SuccessModuleAssembly.swift in Sources */,
 				D44873D42DAD67B100BA3F8C /* MainViewController.swift in Sources */,
 				D44874302DAD9C1B00BA3F8C /* SuccessProtocols.swift in Sources */,

@@ -23,7 +23,9 @@ final class MainRouter: MainRouterInput {
 }
 
 extension MainRouter {
+    
     // MARK: - Full Screen Navigation
+    
     func openFullScreenPhoto(asset: PHAsset) {
         let fullScreenVC = FullScreenPhotoViewController(asset: asset)
         fullScreenVC.modalPresentationStyle = .fullScreen
