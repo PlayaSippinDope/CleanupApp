@@ -7,7 +7,7 @@
 
 import UIKit
 
-enum Constants {
+enum MainConstants {
     // Header
     static let headerTopInset: CGFloat = 16
     static let headerSideInset: CGFloat = 16
