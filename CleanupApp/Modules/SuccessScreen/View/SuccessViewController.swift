@@ -7,23 +7,29 @@
 
 import UIKit
 
-import UIKit
+final class SuccessViewController: UIViewController {
 
-final class SuccessViewController: UIViewController, SuccessViewProtocol {
+    // MARK: - Public Properties
+
     var presenter: SuccessPresenterProtocol!
 
     // MARK: - UI Components
+
     private let celebrationImageView = UIImageView()
     private let congratsLabel = UILabel()
     private let deletedLabel = UILabel()
-    private let savedLabel = UILabel()
-    private let infoLabel = UILabel()
-    private let button = UIButton(type: .system)
+    private let deletedTitleLabel = UILabel()
     private let starsImageView = UIImageView()
+
+    private let savedLabel = UILabel()
+    private let savedSubtitleLabel = UILabel()
     private let clockImageView = UIImageView()
     private let subtitleStack = UIStackView()
-    private let deletedTitleLabel = UILabel()
-    private let savedSubtitleLabel = UILabel()
+
+    private let infoLabel = UILabel()
+    private let button = UIButton(type: .system)
+
+    private let stackView = UIStackView()
 
     private var viewsToAnimate: [UIView] {
         [
@@ -41,31 +47,203 @@ final class SuccessViewController: UIViewController, SuccessViewProtocol {
     }
 
     // MARK: - Lifecycle
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         navigationItem.hidesBackButton = true
 
         setupSubviews()
-        setupLayout()
+        setupConstraints()
         presenter.viewDidLoad()
     }
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        button.layer.cornerRadius = button.frame.height / 2
+        // .capsule уже используется, это можно опустить
     }
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         prepareForAnimation()
     }
-    
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         animateAppearance()
     }
 
-    // MARK: - Public
+    // MARK: - Animation
+
+    private func prepareForAnimation() {
+        viewsToAnimate.forEach {
+            $0.alpha = 0
+            $0.transform = CGAffineTransform(translationX: 0, y: SuccessConstants.animationOffsetY)
+        }
+    }
+
+    private func animateAppearance() {
+        for (index, view) in viewsToAnimate.enumerated() {
+            UIView.animate(
+                withDuration: SuccessConstants.animationDuration,
+                delay: Double(index) * SuccessConstants.animationStagger,
+                options: [.curveEaseInOut],
+                animations: {
+                    view.alpha = 1
+                    view.transform = .identity
+                }
+            )
+        }
+    }
+
+    // MARK: - UI Setup
+
+    private func setupSubviews() {
+        setupImages()
+        setupLabels()
+        setupButton()
+        setupStackView()
+        view.addSubview(stackView)
+        view.addSubview(button)
+    }
+
+    private func setupConstraints() {
+        celebrationImageView.translatesAutoresizingMaskIntoConstraints = false
+        button.translatesAutoresizingMaskIntoConstraints = false
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            celebrationImageView.heightAnchor.constraint(equalToConstant: SuccessConstants.celebrationImageSize),
+            celebrationImageView.widthAnchor.constraint(equalTo: celebrationImageView.heightAnchor),
+
+            stackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            stackView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            stackView.leadingAnchor.constraint(greaterThanOrEqualTo: view.leadingAnchor, constant: SuccessConstants.stackSidePadding),
+            stackView.trailingAnchor.constraint(lessThanOrEqualTo: view.trailingAnchor, constant: -SuccessConstants.stackSidePadding),
+
+            button.heightAnchor.constraint(equalToConstant: SuccessConstants.buttonHeight),
+            button.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: SuccessConstants.buttonSideInset),
+            button.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -SuccessConstants.buttonSideInset),
+            button.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -SuccessConstants.buttonBottomInset)
+        ])
+    }
+
+    private func setupImages() {
+        celebrationImageView.image = UIImage(named: "celebration")
+        celebrationImageView.contentMode = .scaleAspectFit
+
+        starsImageView.image = UIImage(named: "stars")
+        starsImageView.contentMode = .scaleAspectFit
+
+        clockImageView.image = UIImage(named: "hourglass")
+        clockImageView.contentMode = .scaleAspectFit
+
+        [starsImageView, clockImageView].forEach {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                $0.heightAnchor.constraint(equalToConstant: SuccessConstants.iconSize),
+                $0.widthAnchor.constraint(equalTo: $0.heightAnchor)
+            ])
+        }
+    }
+
+    private func setupLabels() {
+        congratsLabel.text = "Congratulations!"
+        congratsLabel.font = .boldSystemFont(ofSize: SuccessConstants.congratsFontSize)
+        congratsLabel.textAlignment = .center
+
+        deletedTitleLabel.text = "You have deleted"
+        deletedTitleLabel.font = .systemFont(ofSize: SuccessConstants.secondaryFontSize)
+        deletedTitleLabel.textColor = .label
+        deletedTitleLabel.textAlignment = .center
+
+        deletedLabel.textAlignment = .center
+        deletedLabel.numberOfLines = 0
+
+        savedLabel.textAlignment = .center
+        savedLabel.numberOfLines = 1
+
+        savedSubtitleLabel.text = "using Cleanup"
+        savedSubtitleLabel.font = .systemFont(ofSize: SuccessConstants.secondaryFontSize)
+        savedSubtitleLabel.textColor = .label
+        savedSubtitleLabel.textAlignment = .center
+
+        infoLabel.text = "Review all your videos. Sort them by size or date.\nSee the ones that occupy the most space."
+        infoLabel.font = .systemFont(ofSize: SuccessConstants.infoFontSize)
+        infoLabel.textColor = .secondaryLabel
+        infoLabel.textAlignment = .center
+        infoLabel.numberOfLines = 0
+    }
+
+    private func setupButton() {
+        var config = UIButton.Configuration.filled()
+        config.title = "Great"
+        config.baseForegroundColor = .white
+        config.background.backgroundColor = .systemBlue
+        config.cornerStyle = .capsule
+        config.attributedTitle = AttributedString("Great", attributes: AttributeContainer([
+            .font: UIFont.systemFont(ofSize: SuccessConstants.buttonFontSize, weight: .medium)
+        ]))
+        button.configuration = config
+        button.addTarget(self, action: #selector(didTapGreat), for: .touchUpInside)
+    }
+
+    private func setupStackView() {
+        let deletedTextStack = UIStackView(arrangedSubviews: [deletedTitleLabel, deletedLabel])
+        deletedTextStack.axis = .vertical
+        deletedTextStack.spacing = SuccessConstants.labelStackSpacing
+        deletedTextStack.alignment = .leading
+
+        let deletedStack = UIStackView(arrangedSubviews: [starsImageView, deletedTextStack])
+        deletedStack.axis = .horizontal
+        deletedStack.spacing = SuccessConstants.horizontalSpacing
+        deletedStack.alignment = .center
+
+        let savedTextStack = UIStackView(arrangedSubviews: [savedLabel, savedSubtitleLabel])
+        savedTextStack.axis = .vertical
+        savedTextStack.spacing = SuccessConstants.labelStackSpacing
+        savedTextStack.alignment = .leading
+
+        subtitleStack.axis = .horizontal
+        subtitleStack.spacing = SuccessConstants.horizontalSpacing
+        subtitleStack.alignment = .center
+        subtitleStack.addArrangedSubview(clockImageView)
+        subtitleStack.addArrangedSubview(savedTextStack)
+
+        stackView.axis = .vertical
+        stackView.spacing = SuccessConstants.stackSpacing
+        stackView.alignment = .center
+
+        stackView.addArrangedSubview(celebrationImageView)
+        stackView.addArrangedSubview(congratsLabel)
+        stackView.addArrangedSubview(deletedStack)
+        stackView.addArrangedSubview(subtitleStack)
+        stackView.addArrangedSubview(infoLabel)
+    }
+
+    // MARK: - Actions
+
+    @objc private func didTapGreat() {
+        presenter.didTapGreat()
+    }
+
+    // MARK: - Helpers
+
+    private func makeAttributed(_ parts: [(String, UIColor, UIFont)]) -> NSAttributedString {
+        let result = NSMutableAttributedString()
+        for (text, color, font) in parts {
+            result.append(NSAttributedString(string: text, attributes: [
+                .foregroundColor: color,
+                .font: font
+            ]))
+        }
+        return result
+    }
+}
+
+// MARK: - SuccessViewProtocol
+
+extension SuccessViewController: SuccessViewProtocol {
     func configure(deletedCount: Int, freedMB: Double) {
         presenter.configure(deletedCount: deletedCount, freedMB: freedMB)
     }
@@ -80,183 +258,5 @@ final class SuccessViewController: UIViewController, SuccessViewProtocol {
             ("Saved ", .label, .systemFont(ofSize: 20)),
             ("10 Minutes", .systemBlue, .systemFont(ofSize: 20, weight: .semibold))
         ])
-    }
-    
-    // MARK: - Animation
-    private func prepareForAnimation() {
-        viewsToAnimate.forEach {
-            $0.alpha = 0
-            $0.transform = CGAffineTransform(translationX: 0, y: 20)
-        }
-    }
-
-    private func animateAppearance() {
-        for (index, view) in viewsToAnimate.enumerated() {
-            UIView.animate(
-                withDuration: 0.6,
-                delay: Double(index) * 0.1,
-                options: [.curveEaseInOut],
-                animations: {
-                    view.alpha = 1
-                    view.transform = .identity
-                },
-                completion: nil
-            )
-        }
-    }
-    
-    // MARK: - Setup Layout
-    private func setupSubviews() {
-        // Image
-        celebrationImageView.image = UIImage(named: "celebration")
-        celebrationImageView.contentMode = .scaleAspectFit
-
-        // Congrats Label
-        congratsLabel.text = "Congratulations!"
-        congratsLabel.font = .boldSystemFont(ofSize: 32)
-        congratsLabel.textAlignment = .center
-
-        // Deleted Title Label
-        deletedTitleLabel.text = "You have deleted"
-        deletedTitleLabel.font = .systemFont(ofSize: 20)
-        deletedTitleLabel.textColor = .label
-        deletedTitleLabel.textAlignment = .center
-
-        // Deleted Label
-        deletedLabel.textAlignment = .center
-        deletedLabel.numberOfLines = 0
-
-        starsImageView.image = UIImage(named: "stars")
-        starsImageView.contentMode = .scaleAspectFit
-        starsImageView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            starsImageView.heightAnchor.constraint(equalToConstant: 48),
-            starsImageView.widthAnchor.constraint(equalTo: starsImageView.heightAnchor)
-        ])
-
-        // Title Stack (Deleted Title + Deleted Label)
-        let titleTextStack = UIStackView(arrangedSubviews: [deletedTitleLabel, deletedLabel])
-        titleTextStack.axis = .vertical
-        titleTextStack.spacing = 2
-        titleTextStack.alignment = .leading
-
-        let titleStack = UIStackView(arrangedSubviews: [starsImageView, titleTextStack])
-        titleStack.axis = .horizontal
-        titleStack.spacing = 8
-        titleStack.alignment = .center
-
-        // Saved Label
-        savedLabel.textAlignment = .center
-        savedLabel.numberOfLines = 1
-
-        // Saved Subtitle Label
-        savedSubtitleLabel.text = "using Cleanup"
-        savedSubtitleLabel.font = .systemFont(ofSize: 20)
-        savedSubtitleLabel.textColor = .label
-        savedSubtitleLabel.textAlignment = .center
-
-        clockImageView.image = UIImage(named: "hourglass")
-        clockImageView.contentMode = .scaleAspectFit
-        clockImageView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            clockImageView.heightAnchor.constraint(equalToConstant: 48),
-            clockImageView.widthAnchor.constraint(equalTo: clockImageView.heightAnchor)
-        ])
-
-        // Subtitle Stack (Saved Label + Saved Subtitle Label)
-        let subtitleTextStack = UIStackView(arrangedSubviews: [savedLabel, savedSubtitleLabel])
-        subtitleTextStack.axis = .vertical
-        subtitleTextStack.spacing = 2
-        subtitleTextStack.alignment = .leading
-
-        subtitleStack.axis = .horizontal
-        subtitleStack.spacing = 6
-        subtitleStack.alignment = .center
-        subtitleStack.addArrangedSubview(clockImageView)
-        subtitleStack.addArrangedSubview(subtitleTextStack)
-
-        // Info Label
-        infoLabel.font = .systemFont(ofSize: 14)
-        infoLabel.textColor = .secondaryLabel
-        infoLabel.textAlignment = .center
-        infoLabel.numberOfLines = 0
-        infoLabel.text = "Review all your videos. Sort them by size or date.\nSee the ones that occupy the most space."
-
-        // Button
-        var config = UIButton.Configuration.filled()
-        config.title = "Great"
-        config.baseForegroundColor = .white
-        config.background.backgroundColor = .systemBlue
-        config.cornerStyle = .capsule
-        config.attributedTitle = AttributedString("Great", attributes: AttributeContainer([
-            .font: UIFont.systemFont(ofSize: 20, weight: .medium)
-        ]))
-        button.configuration = config
-        button.addTarget(self, action: #selector(didTapGreat), for: .touchUpInside)
-
-        // Add subviews
-        view.addSubview(button)
-
-        let stack = UIStackView(arrangedSubviews: [
-            celebrationImageView,
-            congratsLabel,
-            titleStack,
-            subtitleStack,
-            infoLabel
-        ])
-        stack.axis = .vertical
-        stack.spacing = 20
-        stack.alignment = .center
-        stack.translatesAutoresizingMaskIntoConstraints = false
-
-        view.addSubview(stack)
-
-        // Constraints
-        NSLayoutConstraint.activate([
-            celebrationImageView.heightAnchor.constraint(equalToConstant: 280),
-            celebrationImageView.widthAnchor.constraint(equalTo: celebrationImageView.heightAnchor),
-
-            stack.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            stack.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            stack.leadingAnchor.constraint(greaterThanOrEqualTo: view.leadingAnchor, constant: 20),
-            stack.trailingAnchor.constraint(lessThanOrEqualTo: view.trailingAnchor, constant: -20),
-
-            button.heightAnchor.constraint(equalToConstant: 60),
-            button.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            button.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            button.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -50)
-        ])
-    }
-
-
-    private func setupLayout() {
-        celebrationImageView.translatesAutoresizingMaskIntoConstraints = false
-        button.translatesAutoresizingMaskIntoConstraints = false
-    }
-
-    // MARK: - Helpers
-    private func makeLabel(text: String? = nil, font: UIFont = .systemFont(ofSize: 20), color: UIColor = .label, alignment: NSTextAlignment = .left) -> UILabel {
-        let label = UILabel()
-        label.text = text
-        label.font = font
-        label.textColor = color
-        label.textAlignment = alignment
-        return label
-    }
-
-    private func makeAttributed(_ parts: [(String, UIColor, UIFont)]) -> NSAttributedString {
-        let result = NSMutableAttributedString()
-        parts.forEach { string, color, font in
-            result.append(NSAttributedString(string: string, attributes: [
-                .foregroundColor: color,
-                .font: font
-            ]))
-        }
-        return result
-    }
-
-    // MARK: - Actions
-    @objc private func didTapGreat() {
-        presenter.didTapGreat()
     }
 }

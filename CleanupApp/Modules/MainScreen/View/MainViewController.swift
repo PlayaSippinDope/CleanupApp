@@ -8,14 +8,18 @@
 import UIKit
 
 final class MainViewController: UIViewController {
+    
     // MARK: - Public Properties
+    
     var presenter: MainViewOutput?
     
     // MARK: - Private Properties
+    
     private var photoGroups: [PhotoGroup] = []
     private var shouldScrollToFirstItem = false
 
     // MARK: - UI Elements
+    
     private lazy var headerView: UILabel = {
         let headerView = UILabel()
         headerView.font = .boldSystemFont(ofSize: 24)
@@ -81,6 +85,7 @@ final class MainViewController: UIViewController {
     }()
     
     // MARK: - Lifecycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor.systemBlue
@@ -99,6 +104,7 @@ final class MainViewController: UIViewController {
     }
     
     // MARK: - Setup Layout
+    
     private func setupLayout() {
         setupHeaderView()
         setupCollectionView()
@@ -165,6 +171,7 @@ final class MainViewController: UIViewController {
 }
 
 // MARK: - Actions
+
 extension MainViewController {
     @objc private func deleteButtonTapped() {
         shouldScrollToFirstItem = true
@@ -234,6 +241,7 @@ extension MainViewController {
 }
 
 // MARK: - MainViewInput
+
 extension MainViewController: MainViewInput {
     func reloadHeader(for section: Int) {
         let indexPath = IndexPath(item: 0, section: section)
@@ -370,6 +378,7 @@ extension MainViewController: MainViewInput {
 }
 
 // MARK: - UICollectionViewDataSource, UICollectionViewDelegate
+
 extension MainViewController: UICollectionViewDataSource, UICollectionViewDelegate {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return photoGroups.count
@@ -416,6 +425,7 @@ extension MainViewController: UICollectionViewDataSource, UICollectionViewDelega
 }
 
 // MARK: - PhotoSectionHeaderViewDelegate
+
 extension MainViewController: PhotoSectionHeaderViewDelegate {
     func didTapSelectAll(in section: Int) {
         let totalItems = photoGroups[section].assets.count
@@ -424,6 +434,7 @@ extension MainViewController: PhotoSectionHeaderViewDelegate {
 }
 
 // MARK: - PhotoCellDelegate
+
 extension MainViewController: PhotoCellDelegate {
     func photoCellDidToggleSelection(_ cell: PhotoCollectionViewCell) {
         guard let indexPath = collectionView.indexPath(for: cell) else { return }
