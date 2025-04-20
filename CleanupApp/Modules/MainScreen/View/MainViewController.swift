@@ -117,20 +117,20 @@ final class MainViewController: UIViewController {
         view.addSubview(headerView)
         
         NSLayoutConstraint.activate([
-            headerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: Constants.headerTopInset),
-            headerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.headerSideInset),
-            headerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.headerSideInset),
-            headerView.heightAnchor.constraint(equalToConstant: Constants.headerHeight)
+            headerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: MainConstants.headerTopInset),
+            headerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: MainConstants.headerSideInset),
+            headerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -MainConstants.headerSideInset),
+            headerView.heightAnchor.constraint(equalToConstant: MainConstants.headerHeight)
         ])
     }
     
     private func setupCollectionView() {
         view.addSubview(collectionView)
         
-        collectionView.layer.cornerRadius = Constants.collectionCornerRadius
+        collectionView.layer.cornerRadius = MainConstants.collectionCornerRadius
         collectionView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         collectionView.layer.masksToBounds = true
-        collectionView.contentInset.top = Constants.collectionTopInset
+        collectionView.contentInset.top = MainConstants.collectionTopInset
 
         NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: headerView.bottomAnchor),
@@ -144,10 +144,10 @@ final class MainViewController: UIViewController {
         view.addSubview(deleteButton)
         
         NSLayoutConstraint.activate([
-            deleteButton.heightAnchor.constraint(equalToConstant: Constants.deleteButtonHeight),
-            deleteButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.deleteButtonSideInset),
-            deleteButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.deleteButtonSideInset),
-            deleteButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -Constants.deleteButtonBottomInset)
+            deleteButton.heightAnchor.constraint(equalToConstant: MainConstants.deleteButtonHeight),
+            deleteButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: MainConstants.deleteButtonSideInset),
+            deleteButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -MainConstants.deleteButtonSideInset),
+            deleteButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -MainConstants.deleteButtonBottomInset)
         ])
     }
     
@@ -164,7 +164,7 @@ final class MainViewController: UIViewController {
         view.addSubview(loadingLabel)
 
         NSLayoutConstraint.activate([
-            loadingLabel.topAnchor.constraint(equalTo: loadingIndicator.bottomAnchor, constant: Constants.loadingLabelTopOffset),
+            loadingLabel.topAnchor.constraint(equalTo: loadingIndicator.bottomAnchor, constant: MainConstants.loadingLabelTopOffset),
             loadingLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
     }
@@ -337,7 +337,7 @@ extension MainViewController: MainViewInput {
         let attributedText = NSMutableAttributedString(string: fullText)
 
         let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.lineSpacing = Constants.headerLineSpacing
+        paragraphStyle.lineSpacing = MainConstants.headerLineSpacing
 
         attributedText.addAttribute(.paragraphStyle, value: paragraphStyle, range: NSRange(location: 0, length: fullText.count))
 
